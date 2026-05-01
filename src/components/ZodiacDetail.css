@@ -1,0 +1,96 @@
+.zodiac-detail-card {
+  width: 100%;
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 32px;
+  margin: 20px 0;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow);
+  border: 1px solid #f1f3f5;
+}
+
+.detail-header h2 {
+  font-size: 1.8rem;
+  color: var(--text-main);
+  margin: 8px 0;
+}
+
+.detail-symbol {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.detail-dates {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item .label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.detail-item .value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.detail-traits {
+  margin-bottom: 24px;
+}
+
+.detail-traits h3 {
+  font-size: 1rem;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.detail-traits p {
+  font-size: 0.95rem;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.detail-interpretation {
+  background: #fff0f0;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: left;
+  border-left: 4px solid var(--primary);
+}
+
+.detail-interpretation h3 {
+  font-size: 1rem;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.detail-interpretation p {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+.detail-decoration {
+  margin-top: 24px;
+}

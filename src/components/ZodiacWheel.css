@@ -1,0 +1,117 @@
+.zodiac-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 0;
+  width: 100%;
+}
+
+.zodiac-wheel-wrapper {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zodiac-wheel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.zodiac-wheel::before {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border: 0.5px solid var(--gold-metallic);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.zodiac-item {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+
+.zodiac-item:hover, .zodiac-item.active {
+  border-color: var(--gold-metallic);
+  background: rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  transform: scale(1.2) !important; /* Scale overrides the inline transform rotation temporarily */
+}
+
+/* Correcting the scale while maintaining position is tricky with inline transforms, 
+   so we rely on the parent wrapper's logic or simple hover effects. */
+
+.zodiac-symbol {
+  font-size: 1.8rem;
+  color: var(--gold-metallic);
+  transition: transform 0.3s ease;
+}
+
+.wheel-center {
+  width: 180px;
+  height: 180px;
+  background: rgba(15, 15, 15, 0.8);
+  border: 1px solid var(--gold-metallic);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 2;
+  box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.wheel-center h3 {
+  font-size: 1.4rem;
+  color: var(--gold-metallic);
+  margin: 5px 0;
+}
+
+.wheel-center p {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .zodiac-wheel-wrapper {
+    width: 300px;
+    height: 300px;
+  }
+  .zodiac-item {
+    transform: rotate(var(--angle)) translateY(-110px) rotate(calc(-1 * var(--angle))) !important;
+  }
+  .wheel-center {
+    width: 140px;
+    height: 140px;
+  }
+}
