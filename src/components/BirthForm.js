@@ -27,7 +27,7 @@ const KOREA_LOCATIONS = {
 // Convert province names to an array for easier iteration
 const PROVINCES = Object.keys(KOREA_LOCATIONS);
 
-const BirthForm = ({ onCalculate }) => {
+const BirthForm = ({ onCalculate, loading, errorMessage }) => {
   const [formData, setFormData] = useState({
     date: '',
     time: '',
@@ -56,12 +56,12 @@ const BirthForm = ({ onCalculate }) => {
 
   const handleCityChange = (e) => {
     const selectedCity = e.target.value;
-    setFormData(prev => ({ ...prev, city: selectedCity, location: `${selectedProvince ? selectedProvince + ' ' : ''}${selectedCity}` }));
+    setFormData((prev) => ({
+      ...prev,
+      city: selectedCity,
+      location: `${prev.province ? `${prev.province} ` : ''}${selectedCity}`.trim(),
+    }));
   };
-  
-  // Get the selected province value for forming the full location string
-  const selectedProvince = formData.province;
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,9 +76,15 @@ const BirthForm = ({ onCalculate }) => {
 
   return (
     <section className="birth-form-section">
-      <h2 className="form-title">사주 정보 입력</h2>
-      <p className="form-subtitle">정확한 분석을 위해 상세 정보를 입력해주세요</p>
-      
+      <h2 className="form-title">출생차트 정보 입력</h2>
+      <p className="form-subtitle">생년월일·시간·태어난 곳을 입력하면 행성 위치와 AI 해석을 보여드려요</p>
+
+      {errorMessage ? (
+        <div className="birth-form-error" role="alert">
+          {errorMessage}
+        </div>
+      ) : null}
+
       <form className="birth-form" onSubmit={handleSubmit}>
         <div className="input-group">
           <label>생년월일</label>
@@ -97,7 +103,8 @@ const BirthForm = ({ onCalculate }) => {
             type="time" 
             name="time" 
             value={formData.time} 
-            onChange={handleChange} 
+            onChange={handleChange}
+            required
           />
         </div>
         
@@ -137,8 +144,8 @@ const BirthForm = ({ onCalculate }) => {
         {/* Hidden input for combined location for submission, if needed by onCalculate */}
         {/* <input type="hidden" name="location" value={formData.location} /> */}
 
-        <button type="submit" className="celestial-button">
-          나의 운명 확인하기
+        <button type="submit" className="celestial-button" disabled={loading}>
+          {loading ? '차트 계산 중…' : '출생차트 보기'}
         </button>
       </form>
     </section>

@@ -13,7 +13,18 @@
 .form-subtitle {
   color: var(--text-muted);
   font-size: 0.9rem;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+}
+
+.birth-form-error {
+  background: #fff5f5;
+  border: 1px solid #ffc9c9;
+  color: #c92a2a;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  line-height: 1.45;
 }
 
 .birth-form {
@@ -99,4 +110,11 @@
 
 .celestial-button:active {
   transform: translateY(0);
+}
+
+.celestial-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }

@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import './App.css';
 import BirthForm from './components/BirthForm';
 import ZodiacDetail from './components/ZodiacDetail';
+import NatalChartSummary from './components/NatalChartSummary';
+import { ZODIAC_DATA } from './components/ZodiacDetail';
+import { fetchChartInterpretation } from './api/chartInterpret';
+import { getBirthCoordinates } from './lib/koreaLocations';
+import { computeNatalChart } from './lib/natalLocal';
+import { parseDateParts } from './lib/parseBirthDate';
 
 const ZODIAC_SIGNS = [
   { name: 'Capricorn', symbol: '♑', dates: 'Dec 22 - Jan 19', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19 },
@@ -21,6 +27,11 @@ const ZODIAC_SIGNS = [
 function App() {
   const [view, setView] = useState('home'); // home, form, result
   const [calculatedSign, setCalculatedSign] = useState(null);
+  const [chartResult, setChartResult] = useState(null);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [chartError, setChartError] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [moreInfoError, setMoreInfoError] = useState(null);
 
   const calculateZodiac = (dateStr) => {
     const date = new Date(dateStr);
@@ -35,15 +46,78 @@ function App() {
   };
 
   const handleCalculate = (formData) => {
+    setChartError(null);
+    setMoreInfoError(null);
+    setChartLoading(true);
     const sign = calculateZodiac(formData.date);
     setCalculatedSign(sign);
-    setView('result');
+
+    try {
+      const parts = parseDateParts(formData.date, formData.time || '12:00');
+      const coords = getBirthCoordinates(formData.province, formData.city);
+      const { planets, houses, calculation } = computeNatalChart(parts, coords);
+      const locationLabel = `${formData.province} ${formData.city}`.trim();
+
+      const data = {
+        meta: {
+          birthLocal: `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')} ${String(parts.hour).padStart(2, '0')}:${String(parts.minute).padStart(2, '0')}`,
+          locationLabel,
+          timezone: coords.timezone,
+          latitude: coords.lat,
+          longitude: coords.lng,
+          chartEngine: `${calculation.library} (${calculation.ephemeris})`,
+          chartLicense: calculation.license,
+        },
+        planets,
+        houses,
+        calculation,
+      };
+
+      setChartResult(data);
+      setView('result');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setChartError(msg);
+    } finally {
+      setChartLoading(false);
+    }
+  };
+
+  const handleMoreInfo = async () => {
+    if (!chartResult) return;
+    setAiLoading(true);
+    setMoreInfoError(null);
+    try {
+      const { aiInterpretation } = await fetchChartInterpretation({
+        meta: chartResult.meta,
+        planets: chartResult.planets,
+        houses: chartResult.houses,
+        calculation: chartResult.calculation,
+      });
+      setChartResult((prev) => (prev ? { ...prev, aiInterpretation } : null));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setMoreInfoError(msg);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const goHome = () => {
     setView('home');
     setCalculatedSign(null);
+    setChartResult(null);
+    setChartError(null);
+    setChartLoading(false);
+    setAiLoading(false);
+    setMoreInfoError(null);
   };
+
+  const calendarSunLabel =
+    calculatedSign &&
+    ZODIAC_DATA[calculatedSign.name]
+      ? `${ZODIAC_DATA[calculatedSign.name].korName} (${calculatedSign.name})`
+      : null;
 
   return (
     <div className="container">
@@ -66,8 +140,8 @@ function App() {
             <main className="service-grid">
               <div className="service-card" onClick={() => setView('form')}>
                 <div className="service-icon">📖</div>
-                <h3>990원 사주</h3>
-                <p>가볍게 보는 나의 인생 총운</p>
+                <h3>출생차트</h3>
+                <p>기기에서 행성 계산 · 더 보기에서 AI 해석</p>
                 <span className="go-button">보러가기 {'>'}</span>
               </div>
 
@@ -97,19 +171,40 @@ function App() {
 
         {view === 'form' && (
           <div className="view-container">
-            <button className="back-button" onClick={goHome}>← 돌아가기</button>
-            <BirthForm onCalculate={handleCalculate} />
+            <button type="button" className="back-button" onClick={goHome}>← 돌아가기</button>
+            <BirthForm
+              onCalculate={handleCalculate}
+              loading={chartLoading}
+              errorMessage={chartError}
+            />
           </div>
         )}
 
         {view === 'result' && (
           <div className="view-container">
-            <button className="back-button" onClick={goHome}>← 다시하기</button>
+            <button type="button" className="back-button" onClick={goHome}>← 다시하기</button>
             <div className="result-header">
-              <h2>당신의 별자리 결과</h2>
-              <p>입력하신 정보를 바탕으로 분석한 결과입니다.</p>
+              <h2>당신의 출생차트</h2>
+              <p>행성·하우스는 이 기기에서 계산되었습니다. AI 해석은 아래에서 요청할 때만 서버(OpenAI)를 사용합니다.</p>
             </div>
-            <ZodiacDetail sign={calculatedSign} />
+            {chartResult ? (
+              <NatalChartSummary
+                chart={chartResult}
+                calendarSunLabel={calendarSunLabel}
+                onMoreInfo={handleMoreInfo}
+                moreInfoLoading={aiLoading}
+                moreInfoError={moreInfoError}
+              />
+            ) : null}
+            {calculatedSign ? (
+              <>
+                <div className="result-subdivider">
+                  <h3 className="result-subtitle">달력식 태양별자리 (참고)</h3>
+                  <p className="result-subcopy">생일만으로 나누는 대중적인 별자리입니다. 위 네이탈 태양과 다를 수 있습니다.</p>
+                </div>
+                <ZodiacDetail sign={calculatedSign} />
+              </>
+            ) : null}
           </div>
         )}
 
@@ -137,4 +232,3 @@ function App() {
 }
 
 export default App;
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import './ZodiacDetail.css';
 
-const ZODIAC_DATA = {
+export const ZODIAC_DATA = {
   Aries: { korName: '양자리', element: '불', quality: '활동', ruler: '화성', traits: '모험심이 강하고, 에너지가 넘치며 용감합니다.', interpretation: '당신은 타고난 리더입니다! 새로운 도전을 두려워하지 않는 용기가 당신의 가장 큰 무기네요.' },
   Taurus: { korName: '황소자리', element: '흙', quality: '고정', ruler: '금성', traits: '인내심이 강하고, 신뢰할 수 있으며 따뜻한 마음을 가졌습니다.', interpretation: '안정감을 중시하는 당신은 주변 사람들에게 든든한 버팀목이 되어주는 존재입니다.' },
   Gemini: { korName: '쌍둥이자리', element: '공기', quality: '변통', ruler: '수성', traits: '적응력이 뛰어나고, 다재다능하며 지적입니다.', interpretation: '호기심 천국! 당신의 빠른 두뇌 회전과 소통 능력은 어디서나 빛이 납니다.' },
