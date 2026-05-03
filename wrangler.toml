@@ -1,0 +1,6 @@
+# Cloudflare Pages: 빌드 폴더 + ./functions
+# 배포: npm run build 후 Dashboard에서 프로젝트 연결 또는 `wrangler pages deploy build`
+# 로컬 함수 테스트: npm run build && npm run pages:dev  (.dev.vars 에 OPENAI_API_KEY)
+name = "tell-me-star"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "build"

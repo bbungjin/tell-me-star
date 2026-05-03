@@ -23,7 +23,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Cloudflare Worker
-worker/node_modules
-worker/.wrangler
-worker/.dev.vars
+# Cloudflare Pages Functions 로컬 시크릿 (커밋 금지)
+.dev.vars

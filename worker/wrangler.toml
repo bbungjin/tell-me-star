@@ -1,9 +1,0 @@
-name = "tell-me-star-api"
-main = "src/index.js"
-compatibility_date = "2024-11-01"
-
-# Secrets: wrangler secret put OPENAI_API_KEY  (AI 해석 API만 사용)
-# 역할: POST /api/chart-interpret — 브라우저에서 계산된 차트 JSON → OpenAI
-
-[vars]
-ALLOWED_ORIGINS = "http://localhost:3000,*"

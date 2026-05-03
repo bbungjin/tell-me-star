@@ -1,0 +1,52 @@
+.natal-chart-wheel {
+  width: 100%;
+  max-width: min(420px, 100%);
+  margin: 0 auto 24px;
+}
+
+.natal-chart-wheel__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.natal-chart-wheel__zodiac-glyph {
+  font-size: 14px;
+  fill: #334155;
+  pointer-events: none;
+}
+
+.natal-chart-wheel__axis-label {
+  font-size: 10px;
+  font-weight: 700;
+  fill: #0f172a;
+  pointer-events: none;
+}
+
+.natal-chart-wheel__planet-glyph {
+  font-size: 13px;
+  fill: #1e293b;
+  pointer-events: none;
+}
+
+.natal-chart-wheel__retro {
+  font-size: 8px;
+  fill: #64748b;
+}
+
+.natal-chart-wheel__hint {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  text-align: center;
+}
+
+.natal-wheel-fallback {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px;
+}

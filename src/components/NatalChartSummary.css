@@ -19,6 +19,14 @@
   gap: 24px;
 }
 
+.natal-wheel-block {
+  text-align: center;
+}
+
+.natal-wheel-block .natal-section-title {
+  margin-bottom: 12px;
+}
+
 .natal-section-title {
   font-size: 1.1rem;
   color: var(--text-main);
@@ -178,4 +186,34 @@
 .natal-more-button:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.natal-details {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  border: 1px solid #e9ecef;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+
+.natal-details__summary {
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+  list-style: none;
+}
+
+.natal-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.natal-details[open] .natal-details__summary {
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.natal-details .natal-table-wrap:first-of-type {
+  margin-top: 0;
 }

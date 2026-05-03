@@ -1,7 +1,9 @@
 /**
- * Worker는 OpenAI 해석만 담당합니다. POST /api/chart-interpret
+ * POST /api/chart-interpret — Pages Functions(OpenAI)
+ * - 비움: 같은 출처 `/api/chart-interpret` (Pages 배포 또는 `npm run pages:dev`)
+ * - REACT_APP_API_BASE_URL: 프리뷰 URL 등 다른 호스트만 쓸 때 (끝에 슬래시 없음)
  */
-const BASE = (process.env.REACT_APP_WORKER_API_URL || "").replace(/\/$/, "");
+const BASE = (process.env.REACT_APP_API_BASE_URL || "").replace(/\/$/, "");
 
 /**
  * @param {{ meta: object, planets: object[], houses: object[], calculation?: object }} chartPayload

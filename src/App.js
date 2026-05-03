@@ -55,10 +55,11 @@ function App() {
     try {
       const parts = parseDateParts(formData.date, formData.time || '12:00');
       const coords = getBirthCoordinates(formData.province, formData.city);
-      const { planets, houses, calculation } = computeNatalChart(parts, coords);
+      const { planets, houses, calculation, angles } = computeNatalChart(parts, coords);
       const locationLabel = `${formData.province} ${formData.city}`.trim();
 
       const data = {
+        angles,
         meta: {
           birthLocal: `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')} ${String(parts.hour).padStart(2, '0')}:${String(parts.minute).padStart(2, '0')}`,
           locationLabel,
@@ -185,7 +186,7 @@ function App() {
             <button type="button" className="back-button" onClick={goHome}>← 다시하기</button>
             <div className="result-header">
               <h2>당신의 출생차트</h2>
-              <p>행성·하우스는 이 기기에서 계산되었습니다. AI 해석은 아래에서 요청할 때만 서버(OpenAI)를 사용합니다.</p>
+              <p>행성·하우스는 이 기기에서 계산되었습니다. AI 해석은 아래에서 요청할 때만 Pages Functions(OpenAI)를 사용합니다.</p>
             </div>
             {chartResult ? (
               <NatalChartSummary

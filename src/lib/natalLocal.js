@@ -1,9 +1,15 @@
 import { Origin, Horoscope } from "circular-natal-horoscope-js";
 
+/** 황경 경도(0~360) */
+function normalizeLongitude(lon) {
+  let x = Number(lon) % 360;
+  if (x < 0) x += 360;
+  return Math.round(x * 10000) / 10000;
+}
+
 /** 황경 경도(0~360)에서 별자리 내 도수(0~30 미만) */
 function degreeInSign(absLon) {
-  let x = Number(absLon) % 360;
-  if (x < 0) x += 360;
+  const x = normalizeLongitude(absLon);
   return Math.round((x % 30) * 100) / 100;
 }
 
@@ -61,6 +67,16 @@ export function computeNatalChart(parts, coords) {
     planets.push(mapBody(b));
   }
 
+  const ascLon = horoscope.Ascendant.ChartPosition.Ecliptic.DecimalDegrees;
+  const mcLon = horoscope.Midheaven.ChartPosition.Ecliptic.DecimalDegrees;
+
+  const angles = {
+    asc: normalizeLongitude(ascLon),
+    dsc: normalizeLongitude(ascLon + 180),
+    mc: normalizeLongitude(mcLon),
+    ic: normalizeLongitude(mcLon + 180),
+  };
+
   const houses = [];
   for (const house of horoscope.Houses) {
     const lon = house.ChartPosition.StartPosition.Ecliptic.DecimalDegrees;
@@ -68,12 +84,14 @@ export function computeNatalChart(parts, coords) {
       house: house.id,
       sign: house.Sign.label,
       degree: degreeInSign(lon),
+      eclipticLongitude: normalizeLongitude(lon),
     });
   }
 
   return {
     planets,
     houses,
+    angles,
     calculation: {
       library: "circular-natal-horoscope-js",
       license: "Unlicense",
@@ -91,6 +109,7 @@ function mapBody(b) {
     name: String(b.label || "").trim(),
     sign: b.Sign.label,
     degree: degreeInSign(lon),
+    eclipticLongitude: normalizeLongitude(lon),
     house: b.House != null && typeof b.House.id === "number" ? b.House.id : null,
     retrograde: !!b.isRetrograde,
   };

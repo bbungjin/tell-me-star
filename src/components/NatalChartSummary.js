@@ -1,5 +1,7 @@
 import React from 'react';
 import './NatalChartSummary.css';
+import NatalChartWheel from './NatalChartWheel';
+import NatalPersonalitySnapshot from './NatalPersonalitySnapshot';
 
 /** @param {{ name: string } | null | undefined} planet */
 function signKo(planet) {
@@ -95,59 +97,73 @@ function NatalChartSummary({
         )}
       </div>
 
-      <div className="natal-table-wrap">
-        <h3 className="natal-section-title">행성 위치</h3>
-        {planets.length === 0 ? (
-          <p className="natal-empty">행성 데이터를 계산하지 못했습니다. 입력값을 확인해 주세요.</p>
-        ) : (
-          <table className="natal-table">
-            <thead>
-              <tr>
-                <th>천체</th>
-                <th>별자리</th>
-                <th>도수</th>
-                <th>하우스</th>
-                <th>역행</th>
-              </tr>
-            </thead>
-            <tbody>
-              {planets.map((p, idx) => (
-                <tr key={`${p.name}-${idx}`}>
-                  <td>{p.name}</td>
-                  <td>{signKo(p)}</td>
-                  <td>{p.degree != null ? `${p.degree}°` : '—'}</td>
-                  <td>{p.house != null ? p.house : '—'}</td>
-                  <td>{p.retrograde ? '예' : ''}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      {planets.length > 0 ? (
+        <NatalPersonalitySnapshot planets={planets} houses={houses} />
+      ) : null}
 
-      {houses.length > 0 && (
-        <div className="natal-table-wrap">
-          <h3 className="natal-section-title">하우스 커스프</h3>
-          <table className="natal-table natal-table--compact">
-            <thead>
-              <tr>
-                <th>하우스</th>
-                <th>별자리</th>
-                <th>도수</th>
-              </tr>
-            </thead>
-            <tbody>
-              {houses.map((h) => (
-                <tr key={h.house}>
-                  <td>{h.house}</td>
-                  <td>{signKo({ sign: h.sign })}</td>
-                  <td>{h.degree != null ? `${h.degree}°` : '—'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {chart?.angles && planets.length > 0 && houses.length >= 12 ? (
+        <div className="natal-wheel-block">
+          <h3 className="natal-section-title">네이탈 차트</h3>
+          <NatalChartWheel angles={chart.angles} planets={planets} houses={houses} />
         </div>
-      )}
+      ) : null}
+
+      <details className="natal-details">
+        <summary className="natal-details__summary">행성·하우스 수치 보기 (선택)</summary>
+        <div className="natal-table-wrap">
+          <h3 className="natal-section-title">행성 위치</h3>
+          {planets.length === 0 ? (
+            <p className="natal-empty">행성 데이터를 계산하지 못했습니다. 입력값을 확인해 주세요.</p>
+          ) : (
+            <table className="natal-table">
+              <thead>
+                <tr>
+                  <th>천체</th>
+                  <th>별자리</th>
+                  <th>도수</th>
+                  <th>하우스</th>
+                  <th>역행</th>
+                </tr>
+              </thead>
+              <tbody>
+                {planets.map((p, idx) => (
+                  <tr key={`${p.name}-${idx}`}>
+                    <td>{p.name}</td>
+                    <td>{signKo(p)}</td>
+                    <td>{p.degree != null ? `${p.degree}°` : '—'}</td>
+                    <td>{p.house != null ? p.house : '—'}</td>
+                    <td>{p.retrograde ? '예' : ''}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {houses.length > 0 && (
+          <div className="natal-table-wrap">
+            <h3 className="natal-section-title">하우스 커스프</h3>
+            <table className="natal-table natal-table--compact">
+              <thead>
+                <tr>
+                  <th>하우스</th>
+                  <th>별자리</th>
+                  <th>도수</th>
+                </tr>
+              </thead>
+              <tbody>
+                {houses.map((h) => (
+                  <tr key={h.house}>
+                    <td>{h.house}</td>
+                    <td>{signKo({ sign: h.sign })}</td>
+                    <td>{h.degree != null ? `${h.degree}°` : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </details>
 
       {chart?.aiInterpretation ? (
         <div className="natal-ai-card">
@@ -162,7 +178,7 @@ function NatalChartSummary({
           <p className="natal-ai-teaser-title">더 많은 정보</p>
           <p className="natal-ai-teaser-copy">
             위 차트를 바탕으로 <strong>OpenAI</strong>가 한국어로 성향·균형 등을 풀어 줍니다.
-            (Worker에 API 키가 설정된 경우에만 동작합니다.)
+            (배포된 Pages Functions에 OPENAI_API_KEY가 설정된 경우에만 동작합니다.)
           </p>
           <button
             type="button"
